@@ -19,8 +19,11 @@ defmodule Ethereumex.HttpClient do
   defp post_request(payload) do
     headers = [{"Content-Type", "application/json"}]
     options = Ethereumex.Config.http_options()
+    Logger.info "RPC URL: #{rpc_url()}"
+    Logger.info "PAYLOAD: #{payload}"
     with {:ok, response} <- HTTPoison.post(rpc_url(), payload, headers, options),
          %HTTPoison.Response{body: body, status_code: code} = response do
+      Logger.info "BODY: #{body}"
       decode_body(body, code)
     else
       {:error, %HTTPoison.Error{reason: reason}} -> {:error, reason}
